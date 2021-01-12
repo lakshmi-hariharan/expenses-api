@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const { createServer } = require("http");
-// 👉 Replace this with express-oauth2-bearer require 👈
+const { auth } = require("express-oauth2-bearer");
 const {
   checkUrl,
   APP_URL, // Public URL for this app
@@ -12,10 +12,14 @@ const {
 
 const app = express();
 
+
+
+
 // Used to normalize URL in Vercel
 app.use(checkUrl());
 
 app.use(cors());
+
 
 const expenses = [
   {
@@ -47,7 +51,11 @@ app.get("/total", (req, res) => {
   res.send({ total, count: expenses.length });
 });
 
-// 👉 Replace this with auth middleware 👈
+ 
+// 👆 public routes above 👆
+app.use(auth());
+// 👇 private routes below 👇
+
 
 app.get("/reports", (req, res) => {
   res.send(expenses);
